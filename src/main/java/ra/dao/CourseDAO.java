@@ -1,8 +1,6 @@
 package ra.dao;
 
-import ra.business.impl.CourseServiceImpl;
 import ra.model.Course;
-import ra.model.dto.CourseDTO;
 
 import java.util.List;
 

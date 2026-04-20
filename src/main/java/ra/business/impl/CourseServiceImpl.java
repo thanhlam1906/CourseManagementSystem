@@ -4,7 +4,7 @@ import ra.business.ICourseService;
 import ra.dao.CourseDAO;
 import ra.dao.impl.CourseDAOImpl;
 import ra.model.Course;
-import ra.model.dto.CourseDTO;
+import ra.dto.CourseDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +101,7 @@ public class CourseServiceImpl implements ICourseService {
 
     private  Course toEntity(CourseDTO dto) {
         Course entity = new Course();
+        entity.setId(dto.getId());
         entity.setName(dto.getCourseName());
         entity.setDuration(dto.getDuration());
         entity.setInstructor(dto.getInstructor());
@@ -112,7 +113,7 @@ public class CourseServiceImpl implements ICourseService {
 
     private CourseDTO toDTO(Course entity) {
         CourseDTO dto = new CourseDTO(entity.getId(), entity.getName(), entity.getDuration(), entity.getInstructor());
-
+        dto.setId(entity.getId());
         dto.setCourseName(entity.getName());
         dto.setDuration(entity.getDuration());
         dto.setInstructor(entity.getInstructor());

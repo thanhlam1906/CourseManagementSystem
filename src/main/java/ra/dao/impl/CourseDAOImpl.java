@@ -2,7 +2,6 @@ package ra.dao.impl;
 
 import ra.dao.CourseDAO;
 import ra.model.Course;
-import ra.model.dto.CourseDTO;
 import ra.utils.DBUtil;
 
 import java.sql.Connection;

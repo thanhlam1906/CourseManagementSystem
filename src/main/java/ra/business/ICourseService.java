@@ -1,7 +1,6 @@
 package ra.business;
 
-import ra.model.Course;
-import ra.model.dto.CourseDTO;
+import ra.dto.CourseDTO;
 
 import java.util.List;
 

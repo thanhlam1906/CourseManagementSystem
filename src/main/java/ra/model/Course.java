@@ -19,7 +19,6 @@ public class Course {
         this.createAt = createAt;
     }
 
-    // Getters and Setters
     public Integer getId() {
         return id;
     }

@@ -1,25 +1,55 @@
-package ra.model.dto;
+package ra.dto;
 
 import java.time.LocalDate;
 
 public class StudentDTO {
+    private Integer id;
     private String name;
     private LocalDate dob;
     private String email;
     private Boolean sex;
     private String phone;
+    private String password;
     private LocalDate createAt ;
 
     public StudentDTO() {
     }
 
     public StudentDTO(String name, LocalDate dob, String email, Boolean sex, String phone, LocalDate createAt) {
+        this(name, dob, email, sex, phone, null, createAt);
+    }
+
+    public StudentDTO(String name, LocalDate dob, String email, Boolean sex, String phone, String password, LocalDate createAt) {
         this.name = name;
         this.dob = dob;
         this.email = email;
         this.sex = sex;
         this.phone = phone;
+        this.password = password;
         this.createAt = createAt;
+    }
+
+    public StudentDTO(Integer id, String name, LocalDate dob, String email, Boolean sex, String phone, LocalDate createAt) {
+        this(id, name, dob, email, sex, phone, null, createAt);
+    }
+
+    public StudentDTO(Integer id, String name, LocalDate dob, String email, Boolean sex, String phone, String password, LocalDate createAt) {
+        this.id = id;
+        this.name = name;
+        this.dob = dob;
+        this.email = email;
+        this.sex = sex;
+        this.phone = phone;
+        this.password = password;
+        this.createAt = createAt;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -62,6 +92,14 @@ public class StudentDTO {
         this.phone = phone;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public LocalDate getCreateAt() {
         return createAt;
     }
@@ -77,7 +115,8 @@ public class StudentDTO {
             sexStr = sex ? "Nam" : "Nữ";
         }
         return "StudentDTO{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", dob=" + dob +
                 ", email='" + email + '\'' +
                 ", sex=" + sexStr +

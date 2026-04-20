@@ -14,7 +14,6 @@ public class DBUtil {
                     "postgres",
                     "1234"
             );
-            System.out.println("thanh cong");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } catch (SQLException e) {

@@ -1,16 +1,16 @@
-package ra.model.dto;
+package ra.dto;
 
 import java.time.LocalDate;
 
 public class CourseDTO {
-//    private Integer courseId;
+    private Integer id;
     private String courseName;
     private Integer duration;
     private String instructor;
     private LocalDate createAt;
 
-    public CourseDTO( String courseName, Integer duration, String instructor, java.time.LocalDate createAt) {
-//        this.courseId = courseId;
+    public CourseDTO(Integer id, String courseName, Integer duration, String instructor, java.time.LocalDate createAt) {
+        this.id = id;
         this.courseName = courseName;
         this.duration = duration;
         this.instructor = instructor;
@@ -18,20 +18,23 @@ public class CourseDTO {
     }
 
     public CourseDTO(Integer id, String name, Integer duration, String instructor) {
+        this.id = id;
+        this.courseName = name;
+        this.duration = duration;
+        this.instructor = instructor;
     }
 
     public CourseDTO() {
 
     }
 
-//
-//    public Integer getCourseId() {
-//        return courseId;
-//    }
-//
-//    public void setCourseId(Integer courseId) {
-//        this.courseId = courseId;
-//    }
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getCourseName() {
         return courseName;
@@ -68,10 +71,11 @@ public class CourseDTO {
     @Override
     public String toString() {
         return "CourseDTO{" +
-//                "courseId=" + courseId +
+                "id=" + id +
                 ", courseName='" + courseName + '\'' +
                 ", duration=" + duration +
                 ", instructor='" + instructor + '\'' +
+                ", createAt=" + createAt +
                 '}';
     }
 }
