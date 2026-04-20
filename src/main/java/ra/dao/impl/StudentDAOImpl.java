@@ -113,8 +113,8 @@ public class StudentDAOImpl implements StudentDAO {
         return students;
     }
 
-    static String toBitValue(Boolean sex) {
-        return Boolean.TRUE.equals(sex) ? "1" : "0";
+    static String toBitValue(Boolean value) {
+        return Boolean.TRUE.equals(value) ? "1" : "0";
     }
 
     private static void setSexBit(PreparedStatement ps, int parameterIndex, Boolean sex) throws SQLException {

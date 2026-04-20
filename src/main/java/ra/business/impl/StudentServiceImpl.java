@@ -4,7 +4,7 @@ import ra.model.Student;
 import ra.model.dto.StudentDTO;
 
 public class StudentServiceImpl {
-    Student toEntity(StudentDTO studentDTO) {
+    public Student toEntity(StudentDTO studentDTO) {
         Student entity = new Student();
         if (studentDTO.getId() != null) {
             entity.setId(studentDTO.getId());
@@ -18,7 +18,7 @@ public class StudentServiceImpl {
         return entity;
     }
 
-    StudentDTO toDTO(Student student) {
+    public StudentDTO toDTO(Student student) {
         StudentDTO dto = new StudentDTO();
         dto.setId(student.getId());
         dto.setName(student.getName());
