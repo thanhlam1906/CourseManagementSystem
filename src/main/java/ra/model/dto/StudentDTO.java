@@ -3,6 +3,7 @@ package ra.model.dto;
 import java.time.LocalDate;
 
 public class StudentDTO {
+    private Integer id;
     private String name;
     private LocalDate dob;
     private String email;
@@ -13,13 +14,22 @@ public class StudentDTO {
     public StudentDTO() {
     }
 
-    public StudentDTO(String name, LocalDate dob, String email, Boolean sex, String phone, LocalDate createAt) {
+    public StudentDTO(Integer id, String name, LocalDate dob, String email, Boolean sex, String phone, LocalDate createAt) {
+        this.id = id;
         this.name = name;
         this.dob = dob;
         this.email = email;
         this.sex = sex;
         this.phone = phone;
         this.createAt = createAt;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -77,7 +87,8 @@ public class StudentDTO {
             sexStr = sex ? "Nam" : "Nữ";
         }
         return "StudentDTO{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", dob=" + dob +
                 ", email='" + email + '\'' +
                 ", sex=" + sexStr +

@@ -99,12 +99,12 @@ public class CourseManagementMenu {
             return;
         }
 
-        String headerFormat = "| %-5s | %-40s | %-15s | %-25s | %-15s |\n";
-        String rowFormat    = "| %-5d | %-40s | %-15d | %-25s | %-15s |\n";
-        String line = "-----------------------------------------------------------------------------------------------------------------";
+        String headerFormat = "| %-5s | %-5s | %-40s | %-15s | %-25s | %-15s |\n";
+        String rowFormat    = "| %-5d | %-5d | %-40s | %-15d | %-25s | %-15s |\n";
+        String line = "-------------------------------------------------------------------------------------------------------------------------------";
 
         System.out.println(line);
-        System.out.printf(headerFormat, "STT", "Tên khóa học", "Thời lượng", "Giảng viên", "Ngày tạo");
+        System.out.printf(headerFormat, "STT", "ID", "Tên khóa học", "Thời lượng", "Giảng viên", "Ngày tạo");
         System.out.println(line);
 
         IntStream.range(0, courses.size())
@@ -113,6 +113,7 @@ public class CourseManagementMenu {
                     String createAtStr = course.getCreateAt() != null ? course.getCreateAt().toString() : "";
                     System.out.printf(rowFormat,
                             (i + 1),               // STT = index + 1
+                            course.getId() != null ? course.getId() : 0,
                             course.getCourseName(),
                             course.getDuration(),
                             course.getInstructor(),

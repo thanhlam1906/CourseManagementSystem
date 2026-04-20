@@ -101,6 +101,9 @@ public class CourseServiceImpl implements ICourseService {
 
     private  Course toEntity(CourseDTO dto) {
         Course entity = new Course();
+        if (dto.getId() != null) {
+            entity.setId(dto.getId());
+        }
         entity.setName(dto.getCourseName());
         entity.setDuration(dto.getDuration());
         entity.setInstructor(dto.getInstructor());
