@@ -118,6 +118,20 @@ public class StudentDAOImpl implements StudentDAO {
     }
 
     @Override
+    public boolean changePassword(Student student) {
+        String sql = "update student set password = ? where id = ? and(email = ? or phone = ?)";
+        try (Connection connection = DBUtil.getConnection(); PreparedStatement ps = connection.prepareCall(sql)) {
+            ps.setString(1, student.getPassword());
+            ps.setInt(2, student.getId());
+            ps.setString(3, student.getEmail());
+            ps.setString(4, student.getPhone());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+        @Override
     public List<Student> searchByName(String name) {
         String sql = "select * from student where name like ?";
         List<Student> students = new ArrayList<>();

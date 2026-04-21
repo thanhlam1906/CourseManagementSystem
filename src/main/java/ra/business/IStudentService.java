@@ -11,4 +11,5 @@ public interface IStudentService {
     boolean updateStudent(StudentDTO studentDTO);
     StudentDTO getStudentById(int id);
     List<StudentDTO> sortNameStudents(boolean isAscending);
+        boolean changePassword(StudentDTO studentDTO);
 }

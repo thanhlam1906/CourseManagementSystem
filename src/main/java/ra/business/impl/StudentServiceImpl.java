@@ -22,7 +22,7 @@ public class StudentServiceImpl implements IStudentService {
     @Override
     public List<StudentDTO> getAllStudents() {
         return dao.getAllStudents().stream()
-                .map(this::toDTO)
+                .map(student -> toDTO(student))
                 .toList();
     }
 
@@ -128,6 +128,21 @@ public class StudentServiceImpl implements IStudentService {
                 .map(student -> toDTO(student))
                 .toList();
 
+    }
+
+    @Override
+    public boolean changePassword(StudentDTO studentDTO) {
+            if (studentDTO.getPassword() == null || studentDTO.getPassword().trim().isEmpty()) {
+                throw new IllegalArgumentException("LOI: MAT KHAU KHONG DUOC DE TRONG");
+            }
+            Student student = dao.findById(studentDTO.getId());
+            if (student == null) {
+                throw new IllegalArgumentException("LOI: KHONG TIM THAY SINH VIEN VOI ID: " + studentDTO.getId());
+            }
+            student.setPassword(studentDTO.getPassword());
+            student.setEmail(studentDTO.getEmail());
+            student.setPhone(studentDTO.getPhone());
+            return dao.changePassword(student);
     }
 
     private StudentDTO toDTO(Student student) {

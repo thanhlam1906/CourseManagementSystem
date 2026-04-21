@@ -8,15 +8,24 @@ public class Enrollment {
     private EnrollmentStatus status;
     private Integer studentId;
     private Integer courseId;
-
+    private Course course;
     public Enrollment() {}
 
-    public Enrollment(Integer id, LocalDateTime registeredAt, EnrollmentStatus status, Integer studentId, Integer courseId) {
+    public Enrollment(Integer id, LocalDateTime registeredAt, EnrollmentStatus status, Integer studentId, Integer courseId, Course course) {
         this.id = id;
         this.registeredAt = registeredAt;
         this.status = status;
         this.studentId = studentId;
         this.courseId = courseId;
+        this.course = course;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     // Getters and Setters

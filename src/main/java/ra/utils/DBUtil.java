@@ -10,7 +10,7 @@ public class DBUtil {
         try{
             Class.forName("org.postgresql.Driver");
             con = DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/course_db",
+                    "jdbc:postgresql://localhost:5432/course_db?escapeSyntaxCallMode=callIfNoReturn",
                     "postgres",
                     "1234"
             );

@@ -1,8 +1,11 @@
 package ra.presentation.admin;
 
+import java.util.Scanner;
+
 public class AdminMenu {
 
     public void displayAdminMenu(){
+        Scanner scanner = new Scanner(System.in);
         while (true){
             System.out.println("=== ADMIN MENU ===");
             System.out.println("1. Quản lí Khoá Học");
@@ -10,7 +13,7 @@ public class AdminMenu {
             System.out.println("3. Quán lí Giảng Viên");
             System.out.println("4. Đăng xuất");
             System.out.print("Lưa chọn chức năng: ");
-            int choice = new java.util.Scanner(System.in).nextInt();
+            int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
                     CourseManagementMenu courseMenu = new CourseManagementMenu();

@@ -3,6 +3,7 @@ package ra.presentation;
 import ra.business.impl.AuthServiceImpl;
 import ra.model.LoginResult;
 import ra.presentation.admin.AdminMenu;
+import ra.presentation.student.StudentMenu;
 
 import java.util.Scanner;
 
@@ -38,6 +39,10 @@ public class LoginMenu {
 
                 if ("ADMIN".equalsIgnoreCase(loginResult.getRole())) {
                     new AdminMenu().displayAdminMenu();
+                }
+
+                if("STUDENT".equalsIgnoreCase(loginResult.getRole())){
+                    new StudentMenu(loginResult.getUserId()).displayStudentMenu();
                 }
                 return;
             } catch (IllegalArgumentException e) {

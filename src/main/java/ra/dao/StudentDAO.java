@@ -10,6 +10,6 @@ public interface StudentDAO {
     boolean deleteStudent(int id);
     boolean updateStudent(Student student);
     Student findById(int id);
+    boolean changePassword(Student student);
     List<Student> searchByName(String name);
-
 }
