@@ -274,7 +274,7 @@ public class StudentMenu {
 
         String headerFormat = "| %-5s | %-40s| %-10s | %-15s |%n";
         String rowFormat = "| %-5d | %-40s| %-10s  | %-15s |%n";
-        String line = "-----------------------------------------------------------------------------------";
+        String line = "--------------------------------------------------------------------------------------------------------";
 
         System.out.println(line);
         System.out.printf(headerFormat, "STT","Ten khoa hoc", "Trang thai" , "Thoi luong");

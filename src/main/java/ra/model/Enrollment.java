@@ -9,15 +9,25 @@ public class Enrollment {
     private Integer studentId;
     private Integer courseId;
     private Course course;
+    private Student student;
     public Enrollment() {}
 
-    public Enrollment(Integer id, LocalDateTime registeredAt, EnrollmentStatus status, Integer studentId, Integer courseId, Course course) {
+    public Enrollment(Integer id, LocalDateTime registeredAt, EnrollmentStatus status, Integer studentId, Integer courseId, Course course, Student student) {
         this.id = id;
         this.registeredAt = registeredAt;
         this.status = status;
         this.studentId = studentId;
         this.courseId = courseId;
         this.course = course;
+        this.student = student;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 
     public Course getCourse() {

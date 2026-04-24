@@ -10,8 +10,9 @@ public class AdminMenu {
             System.out.println("=== ADMIN MENU ===");
             System.out.println("1. Quản lí Khoá Học");
             System.out.println("2. Quản lí Sinh Viên");
-            System.out.println("3. Quán lí Giảng Viên");
-            System.out.println("4. Đăng xuất");
+            System.out.println("3. Quán lí Đăng kí Khóa Học");
+            System.out.println("4. Thống kê dữ liệu ");
+            System.out.println("5. Đăng xuất");
             System.out.print("Lưa chọn chức năng: ");
             int choice = scanner.nextInt();
             switch (choice) {
@@ -24,9 +25,13 @@ public class AdminMenu {
                     studentMenu.displayStudentMNGMenu();
                     break;
                 case 3:
-                    // Call method to manage instructors
+                    EnrollmentManagementMenu enrollmentMenu = new EnrollmentManagementMenu();
+                    enrollmentMenu.displayEnrollmentMNGMenu();
                     break;
                 case 4:
+                    StatisticsMenu statisticsMenu = new StatisticsMenu();
+                    statisticsMenu.displayStatisticsMenu();
+                case 5:
                     System.out.println("Đăng xuất...");
                     return;
                 default:

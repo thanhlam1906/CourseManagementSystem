@@ -1,17 +1,48 @@
 package ra.dto;
 
+import ra.model.Course;
+import ra.model.Student;
+
 import java.time.LocalDateTime;
 
 public class EnrollmentDTO {
+    private Integer enrollment_id;
     private Integer student_id;
     private Integer course_id;
     private String courseName;
     private String status;
     private LocalDateTime createAt;
+    private Course course;
+    private Student student;
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public Integer getEnrollment_id() {
+        return enrollment_id;
+    }
+
+    public void setEnrollment_id(Integer enrollment_id) {
+        this.enrollment_id = enrollment_id;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
     public String getCourseName() {
         return courseName;
     }
+
 
     public void setCourseName(String courseName) {
         this.courseName = courseName;
