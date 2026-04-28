@@ -3,13 +3,11 @@ package ra.presentation.admin;
 import ra.business.impl.CourseServiceImpl;
 import ra.business.impl.EnrollmentServiceImpl;
 import ra.business.impl.StudentServiceImpl;
-import ra.dto.CourseDTO;
+import ra.dto.CourseStatisticsDTO;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class StatisticsMenu {
 
@@ -60,63 +58,33 @@ public class StatisticsMenu {
 
     private void showStudentCountByCourse() {
         System.out.println("\n--- SO LUONG HOC VIEN THEO TUNG KHOA HOC ---");
-        List<CourseDTO> courses = courseService.getAllCourses();
-        Map<Integer, String> courseNames = buildCourseNameMap(courses);
-        Map<Integer, Integer> courseCounts = buildCourseCountMap(courses);
-        List<Integer> orderedCourseIds = courses.stream().map(CourseDTO::getId).toList();
-        printCourseStats(orderedCourseIds, courseNames, courseCounts);
+        printCourseStats(enrollmentService.getCourseStatistics());
     }
 
     private void showTop5Courses() {
         System.out.println("\n--- TOP 5 KHOA HOC NHIEU HOC VIEN NHAT ---");
-        List<CourseDTO> courses = courseService.getAllCourses();
-        Map<Integer, String> courseNames = buildCourseNameMap(courses);
-        Map<Integer, Integer> courseCounts = buildCourseCountMap(courses);
-
-        List<Integer> top5 = courseCounts.entrySet().stream()
-                .sorted(Map.Entry.<Integer, Integer>comparingByValue(Comparator.reverseOrder())
-                        .thenComparing(Map.Entry.comparingByKey()))
-                .map(Map.Entry::getKey)
+        List<CourseStatisticsDTO> top5 = enrollmentService.getCourseStatistics().stream()
+                .sorted(Comparator.comparing(CourseStatisticsDTO::getTotalStudents, Comparator.reverseOrder())
+                        .thenComparing(CourseStatisticsDTO::getCourseId))
                 .limit(5)
                 .toList();
 
-        printCourseStats(top5, courseNames, courseCounts);
+        printCourseStats(top5);
     }
 
     private void showCoursesMoreThan10Students() {
         System.out.println("\n--- KHOA HOC CO TREN 10 HOC VIEN ---");
-        List<CourseDTO> courses = courseService.getAllCourses();
-        Map<Integer, String> courseNames = buildCourseNameMap(courses);
-        Map<Integer, Integer> courseCounts = buildCourseCountMap(courses);
-
-        List<Integer> filteredCourseIds = courseCounts.entrySet().stream()
-                .filter(entry -> entry.getValue() > 10)
-                .sorted(Map.Entry.<Integer, Integer>comparingByValue(Comparator.reverseOrder())
-                        .thenComparing(Map.Entry.comparingByKey()))
-                .map(Map.Entry::getKey)
+        List<CourseStatisticsDTO> filteredCourses = enrollmentService.getCourseStatistics().stream()
+                .filter(course -> course.getTotalStudents() > 10)
+                .sorted(Comparator.comparing(CourseStatisticsDTO::getTotalStudents, Comparator.reverseOrder())
+                        .thenComparing(CourseStatisticsDTO::getCourseId))
                 .toList();
 
-        printCourseStats(filteredCourseIds, courseNames, courseCounts);
+        printCourseStats(filteredCourses);
     }
 
-    private Map<Integer, String> buildCourseNameMap(List<CourseDTO> courses) {
-        return courses.stream().collect(Collectors.toMap(
-                CourseDTO::getId,
-                course -> course.getCourseName() == null ? "(khong co ten)" : course.getCourseName(),
-                (oldValue, newValue) -> oldValue
-        ));
-    }
-
-    private Map<Integer, Integer> buildCourseCountMap(List<CourseDTO> courses) {
-        return courses.stream().collect(Collectors.toMap(
-                CourseDTO::getId,
-                course -> enrollmentService.listNameStudentRegistedCourse(course.getId()).size(),
-                (oldValue, newValue) -> oldValue
-        ));
-    }
-
-    private void printCourseStats(List<Integer> courseIds, Map<Integer, String> courseNames, Map<Integer, Integer> courseCounts) {
-        if (courseIds == null || courseIds.isEmpty()) {
+    private void printCourseStats(List<CourseStatisticsDTO> courses) {
+        if (courses == null || courses.isEmpty()) {
             System.out.println("Khong co du lieu de hien thi.");
             return;
         }
@@ -129,11 +97,15 @@ public class StatisticsMenu {
         System.out.printf(headerFormat, "STT", "ID", "Ten khoa hoc", "So hoc vien");
         System.out.println(line);
 
-        for (int i = 0; i < courseIds.size(); i++) {
-            Integer courseId = courseIds.get(i);
-            String courseName = courseNames.getOrDefault(courseId, "(khong co ten)");
-            int totalStudents = courseCounts.getOrDefault(courseId, 0);
-            System.out.printf(rowFormat, i + 1, courseId, courseName, totalStudents);
+        for (int i = 0; i < courses.size(); i++) {
+            CourseStatisticsDTO course = courses.get(i);
+            System.out.printf(
+                    rowFormat,
+                    i + 1,
+                    course.getCourseId(),
+                    course.getCourseName(),
+                    course.getTotalStudents()
+            );
         }
 
         System.out.println(line);

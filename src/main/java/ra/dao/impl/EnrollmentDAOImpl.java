@@ -104,6 +104,7 @@ public class EnrollmentDAOImpl implements EnrollmentDAO {
     public List<Enrollment> listNameStudentRegistedCourse(int courseId) {
         String sql = "select e.id, e.student_id, e.course_id, s.name as student_name, c.name as course_name \n" +
                 "from enrollment e \n" +
+                "join student s on s.id = e.student_id\n" +
                 "join course c on c.id = e.course_id\n" +
                 "where e.course_id = ?";
         try (Connection connection = DBUtil.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
