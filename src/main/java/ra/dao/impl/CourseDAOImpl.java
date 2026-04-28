@@ -69,7 +69,7 @@ public class CourseDAOImpl implements CourseDAO {
             ps.setInt(2, course.getDuration());
             ps.setString(3, course.getInstructor());
             ps.setInt(4, course.getId());
-            return ps.executeUpdate() > 0; // FIX: truoc day chay execute() roi executeUpdate() => UPDATE 2 lan
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new RuntimeException("Khong the cap nhat khoa hoc: " + e.getMessage(), e);
         }

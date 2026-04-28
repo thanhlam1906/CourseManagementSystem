@@ -38,13 +38,13 @@ public class CourseServiceImpl implements ICourseService {
     @Override
     public boolean addCourse(CourseDTO courseDTO) {
         if (courseDTO.getCourseName() == null || courseDTO.getCourseName().trim().isEmpty() ) {
-            throw new IllegalArgumentException("LỖI: KHÓA HỌC KHÔNG ĐƯỢC ĐỂ TRỐNG");
+            throw new IllegalArgumentException("Loi: KHOA HOC KHONG DUOC DE TRONG");
         }
         if (courseDTO.getDuration() <= 0){
-             throw new IllegalArgumentException("LỖI: THỜI LƯỢNG PHẢI LỚN HƠN 0");
+             throw new IllegalArgumentException("Loi: THOI LUONG PHAI LON HON 0");
         }
         if(courseDTO.getInstructor() == null || courseDTO.getInstructor().trim().isEmpty()){
-            throw new IllegalArgumentException("LỖI: GIẢNG VIÊN KHÔNG ĐƯỢC ĐỂ TRỐNG");
+            throw new IllegalArgumentException("Loi : GIANG VIEN KHONG DUOC DE TRONG");
         }
         return dao.addCourse(toEntity(courseDTO));
     }
@@ -52,7 +52,7 @@ public class CourseServiceImpl implements ICourseService {
     @Override
     public boolean deleteCourse(String id) {
         if (id == null || id.trim().isEmpty()) {
-            throw new IllegalArgumentException("LỖI: ID KHÔNG ĐƯỢC ĐỂ TRỐNG");
+            throw new IllegalArgumentException("loi : id khoa hoc khong duoc de trong");
         }
 
         return dao.deleteCourse(id);
@@ -61,13 +61,13 @@ public class CourseServiceImpl implements ICourseService {
     @Override
     public boolean updateCourse(CourseDTO courseDTO) {
         if (courseDTO.getCourseName() == null || courseDTO.getCourseName().trim().isEmpty() ) {
-            throw new IllegalArgumentException("LỖI: KHÓA HỌC KHÔNG ĐƯỢC ĐỂ TRỐNG");
+            throw new IllegalArgumentException("Loi: khoa hoc khong duoc de trong");
         }
         if (courseDTO.getDuration() <= 0){
-            throw new IllegalArgumentException("LỖI: THỜI LƯỢNG PHẢI LỚN HƠN 0");
+            throw new IllegalArgumentException("Loi : thoi luong phai lon hon 0");
         }
         if(courseDTO.getInstructor() == null || courseDTO.getInstructor().trim().isEmpty()){
-            throw new IllegalArgumentException("LỖI: GIẢNG VIÊN KHÔNG ĐƯỢC ĐỂ TRỐNG");
+            throw new IllegalArgumentException("Loi : giang vien khong duoc de trong");
         }
         return dao.updateCourse(toEntity(courseDTO));
     }

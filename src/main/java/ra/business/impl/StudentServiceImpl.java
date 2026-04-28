@@ -59,7 +59,6 @@ public class StudentServiceImpl implements IStudentService {
             throw new IllegalArgumentException("LOI: MAT KHAU KHONG DUOC DE TRONG");
         }
 
-        // FIX: chi goi getAllStudents 1 lan, kiem tra null-safe
         List<Student> existingStudents = dao.getAllStudents();
         String email = studentDTO.getEmail().trim();
         String phone = studentDTO.getPhone().trim();
