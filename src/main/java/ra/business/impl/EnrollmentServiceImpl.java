@@ -1,7 +1,9 @@
 package ra.business.impl;
 
 import ra.business.IEnrollmentService;
+import ra.dao.CourseDAO;
 import ra.dao.EnrollmentDAO;
+import ra.dao.impl.CourseDAOImpl;
 import ra.dao.impl.EnrollmentDAOImpl;
 import ra.dto.CourseStatisticsDTO;
 import ra.dto.EnrollmentDTO;
@@ -11,12 +13,20 @@ import ra.model.Student;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public class EnrollmentServiceImpl implements IEnrollmentService {
 	private final EnrollmentDAO enrollmentDAO;
+	private final CourseDAO courseDAO;
 
 	public EnrollmentServiceImpl() {
 		this.enrollmentDAO = new EnrollmentDAOImpl();
+		this.courseDAO = new CourseDAOImpl();
+	}
+
+	public EnrollmentServiceImpl(EnrollmentDAO enrollmentDAO, CourseDAO courseDAO) {
+		this.enrollmentDAO = Objects.requireNonNull(enrollmentDAO, "enrollmentDAO khong duoc null");
+		this.courseDAO = Objects.requireNonNull(courseDAO, "courseDAO khong duoc null");
 	}
 
 	@Override
@@ -29,6 +39,9 @@ public class EnrollmentServiceImpl implements IEnrollmentService {
 		}
 		if (enrollmentDTO.getCourse_id() == null || enrollmentDTO.getCourse_id() <= 0) {
 			throw new IllegalArgumentException("ID khoa hoc khong hop le.");
+		}
+		if (courseDAO.findById(enrollmentDTO.getCourse_id()) == null) {
+			throw new IllegalArgumentException("Khoa hoc khong ton tai.");
 		}
 
 		Enrollment enrollment = toEntity(enrollmentDTO);

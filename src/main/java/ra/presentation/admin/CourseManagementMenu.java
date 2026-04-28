@@ -12,7 +12,7 @@ public class CourseManagementMenu {
     private ICourseService courseService = new CourseServiceImpl();
     private Scanner scanner =  new Scanner(System.in);
 
-    public void displayCourseMNGMenu(){
+    public void  displayCourseMNGMenu(){
         while(true){
             System.out.println("===== QUẢN LÝ KHÓA HỌC =====");
             System.out.println("1. Danh sách | 2. Thêm | 3. Sửa | 4. Xóa | 5. Tìm Kiếm | 6. Sap xếp | 0. Quay lại");
@@ -153,10 +153,21 @@ public class CourseManagementMenu {
     }
     public void updateCourse(){
         System.out.print("\nNhập ID khóa học cần sửa: ");
-        int id = Integer.parseInt(scanner.nextLine().trim());
+        int id;
+        try {
+            id = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Lỗi: ID phải là số nguyên.");
+            return;
+        }
 
-        // Goi course len DTO truoc khi update
-        CourseDTO existingCourse = courseService.getCourseById(id);
+        CourseDTO existingCourse;
+        try {
+            existingCourse = courseService.getCourseById(id);
+        } catch (Exception e) {
+            System.err.println("Lỗi hệ thống: " + e.getMessage());
+            return;
+        }
         if (existingCourse == null) {
             System.out.println("Không tìm thấy khóa học với ID: " + id);
             return;
@@ -168,8 +179,14 @@ public class CourseManagementMenu {
             System.out.println("2. Thời lượng: " + existingCourse.getDuration());
             System.out.println("3. Giảng viên: " + existingCourse.getInstructor());
             System.out.println("0. Lưu và quay lại");
-            System.out.println("Vui lòng chọn thông tin cần sửa (0 để lưu): ");
-            int choice  = Integer.parseInt(scanner.nextLine().trim());
+            System.out.print("Vui lòng chọn thông tin cần sửa (0 để lưu): ");
+            int choice;
+            try {
+                choice = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Lỗi: Vui lòng nhập số.");
+                continue;
+            }
             switch (choice) {
                 case 1:
                     System.out.print("Nhập tên khóa học mới: ");
@@ -178,9 +195,11 @@ public class CourseManagementMenu {
                     break;
                 case 2:
                     System.out.print("Nhập thời lượng mới (giờ): ");
-                    int newDuration = Integer.parseInt(scanner.nextLine().trim());
-                    existingCourse.setDuration(newDuration);
-
+                    try {
+                        existingCourse.setDuration(Integer.parseInt(scanner.nextLine().trim()));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Lỗi: Thời lượng phải là số nguyên.");
+                    }
                     break;
                 case 3:
                     System.out.print("Nhập tên giảng viên mới: ");

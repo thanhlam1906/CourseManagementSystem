@@ -9,10 +9,11 @@ public class MainMenu {
 
     public static void main(String[] args) {
         System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
-        LoginMenu loginMenu = new LoginMenu();
+        LoginAdminMenu loginAdminMenu = new LoginAdminMenu();
+        LoginStudentMenu loginStudentMenu = new LoginStudentMenu();
 
         while (true) {
-            System.out.println("=== HE THONG QUAN LY DAO TAO ===");
+            System.out.println("\n=== HE THONG QUAN LY DAO TAO ===");
             System.out.println("1. Dang nhap voi tu cach quan tri vien");
             System.out.println("2. Dang nhap voi tu cach hoc vien");
             System.out.println("0. Thoat");
@@ -28,12 +29,13 @@ public class MainMenu {
 
             switch (choice) {
                 case 1:
-                    loginMenu.login("ADMIN");
+                    loginAdminMenu.displayLoginAdminMenu();
                     break;
                 case 2:
-                    loginMenu.login("STUDENT");
+                    loginStudentMenu.displayLoginStudentMenu();
                     break;
                 case 0:
+                    System.out.println("Tam biet!");
                     return;
                 default:
                     System.out.println("Loi: Lua chon khong hop le.");

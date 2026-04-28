@@ -9,6 +9,7 @@ import ra.dto.StudentDTO;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 
 
@@ -17,6 +18,10 @@ public class StudentServiceImpl implements IStudentService {
 
     public StudentServiceImpl() {
         dao = new StudentDAOImpl();
+    }
+
+    public StudentServiceImpl(StudentDAO dao) {
+        this.dao = Objects.requireNonNull(dao, "studentDAO khong duoc null");
     }
 
     @Override
@@ -28,19 +33,20 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public boolean addStudent(StudentDTO studentDTO) {
-        if (dao.getAllStudents().stream().anyMatch(student -> student.getEmail().equals(studentDTO.getEmail()))) {
-            throw new IllegalArgumentException("LOI: EMAIL DA TON TAI");
+        if (studentDTO == null) {
+            throw new IllegalArgumentException("LOI: THONG TIN SINH VIEN KHONG DUOC TRONG");
         }
+        // FIX: validate truong null/empty TRUOC khi check trung lap (truoc day .equals NPE)
         if (studentDTO.getName() == null || studentDTO.getName().trim().isEmpty()) {
             throw new IllegalArgumentException("LOI: TEN KHONG DUOC DE TRONG");
         }
         if (studentDTO.getDob() == null) {
             throw new IllegalArgumentException("LOI: NGAY SINH KHONG DUOC DE TRONG");
         }
-        if (studentDTO.getDob().isAfter(java.time.LocalDate.now())) {
+        if (studentDTO.getDob().isAfter(LocalDate.now())) {
             throw new IllegalArgumentException("LOI: NGAY SINH KHONG HOP LE");
         }
-        if(studentDTO.getSex() == null){
+        if (studentDTO.getSex() == null) {
             throw new IllegalArgumentException("LOI: GIOI TINH KHONG HOP LE");
         }
         if (studentDTO.getPhone() == null || studentDTO.getPhone().trim().isEmpty()) {
@@ -52,6 +58,20 @@ public class StudentServiceImpl implements IStudentService {
         if (studentDTO.getPassword() == null || studentDTO.getPassword().trim().isEmpty()) {
             throw new IllegalArgumentException("LOI: MAT KHAU KHONG DUOC DE TRONG");
         }
+
+        // FIX: chi goi getAllStudents 1 lan, kiem tra null-safe
+        List<Student> existingStudents = dao.getAllStudents();
+        String email = studentDTO.getEmail().trim();
+        String phone = studentDTO.getPhone().trim();
+        for (Student s : existingStudents) {
+            if (email.equalsIgnoreCase(s.getEmail())) {
+                throw new IllegalArgumentException("LOI: EMAIL DA TON TAI");
+            }
+            if (phone.equals(s.getPhone())) {
+                throw new IllegalArgumentException("LOI: SO DIEN THOAI DA TON TAI");
+            }
+        }
+
         if (studentDTO.getCreateAt() == null) {
             studentDTO.setCreateAt(LocalDate.now());
         }
@@ -132,17 +152,30 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public boolean changePassword(StudentDTO studentDTO) {
-            if (studentDTO.getPassword() == null || studentDTO.getPassword().trim().isEmpty()) {
-                throw new IllegalArgumentException("LOI: MAT KHAU KHONG DUOC DE TRONG");
-            }
-            Student student = dao.findById(studentDTO.getId());
-            if (student == null) {
-                throw new IllegalArgumentException("LOI: KHONG TIM THAY SINH VIEN VOI ID: " + studentDTO.getId());
-            }
-            student.setPassword(studentDTO.getPassword());
-            student.setEmail(studentDTO.getEmail());
-            student.setPhone(studentDTO.getPhone());
-            return dao.changePassword(student);
+        if (studentDTO == null || studentDTO.getId() == null || studentDTO.getId() <= 0) {
+            throw new IllegalArgumentException("LOI: ID SINH VIEN KHONG HOP LE");
+        }
+        if (studentDTO.getOldPassword() == null || studentDTO.getOldPassword().trim().isEmpty()) {
+            throw new IllegalArgumentException("LOI: MAT KHAU HIEN TAI KHONG DUOC DE TRONG");
+        }
+        if (studentDTO.getPassword() == null || studentDTO.getPassword().trim().isEmpty()) {
+            throw new IllegalArgumentException("LOI: MAT KHAU MOI KHONG DUOC DE TRONG");
+        }
+        if (studentDTO.getOldPassword().equals(studentDTO.getPassword())) {
+            throw new IllegalArgumentException("LOI: MAT KHAU MOI PHAI KHAC MAT KHAU HIEN TAI");
+        }
+
+        Student student = dao.findById(studentDTO.getId());
+        if (student == null) {
+            throw new IllegalArgumentException("LOI: KHONG TIM THAY SINH VIEN VOI ID: " + studentDTO.getId());
+        }
+        // FIX: xac thuc mat khau hien tai truoc khi cho doi (bao mat)
+        if (!studentDTO.getOldPassword().equals(student.getPassword())) {
+            throw new IllegalArgumentException("LOI: MAT KHAU HIEN TAI KHONG DUNG");
+        }
+
+        student.setPassword(studentDTO.getPassword());
+        return dao.changePassword(student);
     }
 
     private StudentDTO toDTO(Student student) {

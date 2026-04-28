@@ -10,6 +10,7 @@ public class StudentDTO {
     private Boolean sex;
     private String phone;
     private String password;
+    private String oldPassword; // dung cho doi mat khau (transient, khong map DB)
     private LocalDate createAt ;
 
     public StudentDTO() {
@@ -106,6 +107,14 @@ public class StudentDTO {
 
     public void setCreateAt(LocalDate createAt) {
         this.createAt = createAt;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
     }
 
     @Override

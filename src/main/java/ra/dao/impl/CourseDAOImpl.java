@@ -5,6 +5,7 @@ import ra.model.Course;
 import ra.utils.DBUtil;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -50,48 +51,51 @@ public class CourseDAOImpl implements CourseDAO {
     @Override
     public boolean deleteCourse(String id) {
         String sql = "delete from course where id = ?";
-        try(Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareCall(sql)){
+        try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, Integer.parseInt(id));
-            ps.execute();
-            return true;
+            return ps.executeUpdate() > 0; // FIX: tra ve true chi khi co hang bi xoa
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("ID khoa hoc phai la so nguyen.");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Khong the xoa khoa hoc: " + e.getMessage(), e);
         }
     }
 
     @Override
     public boolean updateCourse(Course course) {
         String sql = "update course set name = ?, duration = ?, instructor = ? where id = ?";
-        try(Connection con = DBUtil.getConnection();PreparedStatement ps = con.prepareCall(sql)){
+        try (Connection con = DBUtil.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, course.getName());
             ps.setInt(2, course.getDuration());
             ps.setString(3, course.getInstructor());
             ps.setInt(4, course.getId());
-            ps.execute();
-            return ps.executeUpdate() > 0;
+            return ps.executeUpdate() > 0; // FIX: truoc day chay execute() roi executeUpdate() => UPDATE 2 lan
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Khong the cap nhat khoa hoc: " + e.getMessage(), e);
         }
     }
 
     @Override
     public Course findById(int id) {
         String sql = "select * from course where id = ?";
-        try(Connection connection = DBUtil.getConnection(); PreparedStatement ps = connection.prepareCall(sql)){
+        try (Connection connection = DBUtil.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
-            try(ResultSet rs = ps.executeQuery()){
-                if (rs.next()){
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
                     Course course = new Course();
                     course.setId(rs.getInt("id"));
                     course.setName(rs.getString("name"));
                     course.setDuration(rs.getInt("duration"));
                     course.setInstructor(rs.getString("instructor"));
-                    course.setCreateAt(rs.getDate("create_at").toLocalDate());
+                    Date createAt = rs.getDate("create_at");
+                    if (createAt != null) {
+                        course.setCreateAt(createAt.toLocalDate());
+                    }
                     return course;
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Khong the tim khoa hoc theo ID: " + e.getMessage(), e);
         }
         return null;
     }

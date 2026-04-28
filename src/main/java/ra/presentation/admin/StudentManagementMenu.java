@@ -116,9 +116,25 @@ public class StudentManagementMenu {
     }
 
     private void updateStudent() {
-        System.out.println("Nhap id sinh vien can sua");
-        int id = Integer.parseInt(scanner.nextLine().trim());
-        StudentDTO student = studentService.getStudentById(id);
+        System.out.print("Nhap id sinh vien can sua: ");
+        int id;
+        try {
+            id = Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Loi: ID phai la so nguyen.");
+            return;
+        }
+
+        StudentDTO student;
+        try {
+            student = studentService.getStudentById(id);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Loi: " + e.getMessage());
+            return;
+        } catch (Exception e) {
+            System.out.println("Loi he thong: " + e.getMessage());
+            return;
+        }
         if (student == null) {
             System.out.println("Khong tim thay sinh vien voi id: " + id);
             return;
@@ -133,7 +149,13 @@ public class StudentManagementMenu {
             System.out.println("5. So dien thoai: " + student.getPhone());
             System.out.println("0. Luu va quay lai");
             System.out.print("Vui long chon thong tin can sua (0 de luu): ");
-            int choice = Integer.parseInt(scanner.nextLine().trim());
+            int choice;
+            try {
+                choice = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Loi: Vui long nhap so.");
+                continue;
+            }
             switch (choice) {
                 case 1:
                     System.out.print("Nhap ten sinh vien moi: ");
@@ -143,8 +165,12 @@ public class StudentManagementMenu {
                 case 2:
                     System.out.print("Nhap ngay sinh moi (yyyy-MM-dd): ");
                     String dobInput = scanner.nextLine().trim();
-                    LocalDate newDob = dobInput.isEmpty() ? null : LocalDate.parse(dobInput);
-                    student.setDob(newDob);
+                    try {
+                        LocalDate newDob = dobInput.isEmpty() ? null : LocalDate.parse(dobInput);
+                        student.setDob(newDob);
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Loi: Ngay sinh phai dung dinh dang yyyy-MM-dd.");
+                    }
                     break;
                 case 3:
                     System.out.print("Nhap email moi: ");

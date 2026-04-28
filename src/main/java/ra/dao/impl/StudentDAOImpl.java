@@ -119,15 +119,14 @@ public class StudentDAOImpl implements StudentDAO {
 
     @Override
     public boolean changePassword(Student student) {
-        String sql = "update student set password = ? where id = ? and(email = ? or phone = ?)";
-        try (Connection connection = DBUtil.getConnection(); PreparedStatement ps = connection.prepareCall(sql)) {
+        // FIX: xac thuc mat khau cu da duoc kiem tra o tang service, chi can update theo id
+        String sql = "update student set password = ? where id = ?";
+        try (Connection connection = DBUtil.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, student.getPassword());
             ps.setInt(2, student.getId());
-            ps.setString(3, student.getEmail());
-            ps.setString(4, student.getPhone());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Khong the doi mat khau: " + e.getMessage(), e);
         }
 
     }

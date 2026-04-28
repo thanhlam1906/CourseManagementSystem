@@ -3,39 +3,44 @@ package ra.presentation.admin;
 import java.util.Scanner;
 
 public class AdminMenu {
+    private final Scanner scanner = new Scanner(System.in);
 
-    public void displayAdminMenu(){
-        Scanner scanner = new Scanner(System.in);
-        while (true){
-            System.out.println("=== ADMIN MENU ===");
-            System.out.println("1. Quản lí Khoá Học");
-            System.out.println("2. Quản lí Sinh Viên");
-            System.out.println("3. Quán lí Đăng kí Khóa Học");
-            System.out.println("4. Thống kê dữ liệu ");
-            System.out.println("5. Đăng xuất");
-            System.out.print("Lưa chọn chức năng: ");
-            int choice = scanner.nextInt();
+    public void displayAdminMenu() {
+        while (true) {
+            System.out.println("\n=== ADMIN MENU ===");
+            System.out.println("1. Quan li Khoa Hoc");
+            System.out.println("2. Quan li Sinh Vien");
+            System.out.println("3. Quan li Dang ki Khoa Hoc");
+            System.out.println("4. Thong ke du lieu");
+            System.out.println("5. Dang xuat");
+            System.out.print("Lua chon chuc nang: ");
+
+            int choice;
+            try {
+                choice = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Loi: Vui long nhap so tu 1 den 5.");
+                continue;
+            }
+
             switch (choice) {
                 case 1:
-                    CourseManagementMenu courseMenu = new CourseManagementMenu();
-                    courseMenu.displayCourseMNGMenu();
+                    new CourseManagementMenu().displayCourseMNGMenu();
                     break;
                 case 2:
-                    StudentManagementMenu studentMenu = new StudentManagementMenu();
-                    studentMenu.displayStudentMNGMenu();
+                    new StudentManagementMenu().displayStudentMNGMenu();
                     break;
                 case 3:
-                    EnrollmentManagementMenu enrollmentMenu = new EnrollmentManagementMenu();
-                    enrollmentMenu.displayEnrollmentMNGMenu();
+                    new EnrollmentManagementMenu().displayEnrollmentMNGMenu();
                     break;
                 case 4:
-                    StatisticsMenu statisticsMenu = new StatisticsMenu();
-                    statisticsMenu.displayStatisticsMenu();
+                    new StatisticsMenu().displayStatisticsMenu();
+                    break; // FIX: thieu break gay roi xuong case 5 (dang xuat)
                 case 5:
-                    System.out.println("Đăng xuất...");
+                    System.out.println("Dang xuat...");
                     return;
                 default:
-                    System.out.println("Lựa chọn không hợp lệ. Hãy thử lại ");
+                    System.out.println("Lua chon khong hop le. Hay thu lai.");
             }
 
         }

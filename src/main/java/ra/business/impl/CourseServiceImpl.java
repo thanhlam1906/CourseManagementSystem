@@ -8,6 +8,7 @@ import ra.dto.CourseDTO;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class CourseServiceImpl implements ICourseService {
@@ -15,6 +16,10 @@ public class CourseServiceImpl implements ICourseService {
 
     public CourseServiceImpl() {
         dao = new CourseDAOImpl();
+    }
+
+    public CourseServiceImpl(CourseDAO dao) {
+        this.dao = Objects.requireNonNull(dao, "courseDAO khong duoc null");
     }
 
     @Override

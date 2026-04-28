@@ -64,22 +64,31 @@ public class StudentMenu {
         System.out.println("\n--------- DOI MAT KHAU ---------");
         System.out.print("Nhap mat khau hien tai: ");
         String currentPassword = scanner.nextLine().trim();
-        System.out.print("Nhap email hoac so dien thoai: ");
-        String emailOrPhone = scanner.nextLine().trim();
         System.out.print("Nhap mat khau moi: ");
         String newPassword = scanner.nextLine().trim();
+        System.out.print("Nhap lai mat khau moi: ");
+        String confirmPassword = scanner.nextLine().trim();
 
-        StudentDTO studentDTO = new StudentDTO();
-        studentDTO.setId(studentId);
-        studentDTO.setPassword(currentPassword);
-        studentDTO.setPassword(newPassword);
-        studentDTO.setEmail(emailOrPhone);
-        studentDTO.setPhone(emailOrPhone);
-        boolean isSuccess = studentService.changePassword(studentDTO);
-        if (isSuccess) {
-            System.out.println("Doi mat khau thanh cong.");
-        } else {
-            System.out.println("Doi mat khau that bai. Vui long kiem tra lai thong tin va thu lai.");
+        if (!newPassword.equals(confirmPassword)) {
+            System.out.println("Loi: Mat khau moi va xac nhan khong khop.");
+            return;
+        }
+
+        try {
+            StudentDTO studentDTO = new StudentDTO();
+            studentDTO.setId(studentId);
+            studentDTO.setOldPassword(currentPassword);
+            studentDTO.setPassword(newPassword);
+            boolean isSuccess = studentService.changePassword(studentDTO);
+            if (isSuccess) {
+                System.out.println("Doi mat khau thanh cong.");
+            } else {
+                System.out.println("Doi mat khau that bai. Vui long thu lai.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Loi: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Loi he thong: " + e.getMessage());
         }
 
     }

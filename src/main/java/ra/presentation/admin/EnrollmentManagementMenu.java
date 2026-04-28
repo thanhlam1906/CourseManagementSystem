@@ -11,123 +11,129 @@ import java.util.stream.IntStream;
 public class EnrollmentManagementMenu {
     private static final EnrollmentServiceImpl enrollmentService = new EnrollmentServiceImpl();
     private static final Scanner scanner = new Scanner(System.in);
-    public void displayEnrollmentMNGMenu(){
-        while(true){
-            System.out.println("======= QUẢN LÍ ĐĂNG KÍ KHÓA HỌC =======");
-            System.out.println("1. Danh sách đăng kí | 2. Duyệt đăng kí khóa học | 3. Xóa sinh viên khỏi khóa học  | 0. Quay lại");
-            System.out.println("Vui lòng chọn chức năng:");
-             int choice = readInt();
-                switch (choice){
-                    case 1:
-                        listEnrollments();
-                        break;
-                    case 2:
-                        approveEnrollment();
-                        break;
-                    case 3:
-                        deleteEnrollment();
-                        break;
-                    case 4:
-                        StatisticsMenu statisticsMenu = new StatisticsMenu();
-                        statisticsMenu.displayStatisticsMenu();
-                    case 0:
-                        return;
-                    default:
-                        System.out.println("Lỗi: Lựa chọn không hợp lệ. Vui lòng chọn lại.");
-                }
+
+    public void displayEnrollmentMNGMenu() {
+        while (true) {
+            System.out.println("\n======= QUAN LI DANG KI KHOA HOC =======");
+            System.out.println("1. Danh sach dang ki theo khoa hoc");
+            System.out.println("2. Duyet dang ki khoa hoc");
+            System.out.println("3. Xoa sinh vien khoi khoa hoc");
+            System.out.println("0. Quay lai");
+            System.out.print("Vui long chon chuc nang: ");
+            int choice = readInt();
+            switch (choice) {
+                case 1:
+                    listEnrollments();
+                    break;
+                case 2:
+                    approveEnrollment();
+                    break;
+                case 3:
+                    deleteEnrollment();
+                    break;
+                case 0:
+                    return;
+                default:
+                    System.out.println("Loi: Lua chon khong hop le. Vui long chon lai.");
+            }
         }
     }
 
     private void deleteEnrollment() {
-        System.out.println("\n--------- XÓA SINH VIÊN KHỎI KHÓA HỌC ---------");
-        try{
+        System.out.println("\n--------- XOA SINH VIEN KHOI KHOA HOC ---------");
+        try {
             List<EnrollmentDTO> enrollments = enrollmentService.listAllApprovedEnrollments();
-            displayCourseEnrollments(enrollments);
-            if(enrollments == null || enrollments.isEmpty()){
-                System.out.println("Khong co sinh vien nao dang ky khoa hoc nay.");
+            if (enrollments == null || enrollments.isEmpty()) {
+                System.out.println("Khong co sinh vien da duyet de xoa.");
                 return;
             }
-            System.out.print("Nhap ID phien  đăng kí muon xoa:");
-            int enrollmentId = Integer.parseInt(scanner.nextLine());
+            displayCourseEnrollments(enrollments);
+
+            int enrollmentId = readPositiveInt("Nhap ID phien dang ki muon xoa: ");
+            if (enrollmentId <= 0) return;
+
             EnrollmentDTO enrollmentDTO = new EnrollmentDTO();
             enrollmentDTO.setEnrollment_id(enrollmentId);
             boolean success = enrollmentService.deleteEnrollmentByEnrollmentId(enrollmentDTO);
-            if(success){
+            if (success) {
                 System.out.println("Xoa sinh vien khoi khoa hoc thanh cong.");
-            }else{
-                System.out.println("Xoa sinh vien khoi khoa hoc that bai. Vui long kiem tra lai ID dang ki.");
+            } else {
+                System.out.println("Xoa that bai. Vui long kiem tra lai ID dang ki.");
             }
-
-        } catch (NumberFormatException e) {
-            throw new RuntimeException(e);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Loi: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Loi he thong: " + e.getMessage());
         }
     }
 
-
     private void approveEnrollment() {
-        System.out.println("\n--------- KHÓA HỌC CHƯA DUYỆT ---------");
-        try{
-            System.out.println("Hien thi danh sach dang ki khoa hoc chua duyet:");
+        System.out.println("\n--------- KHOA HOC CHUA DUYET ---------");
+        try {
             List<EnrollmentDTO> pendingEnrollments = enrollmentService.listAllWaitingEnrollments();
-                if(pendingEnrollments == null || pendingEnrollments.isEmpty()){
-                    System.out.println("Khong co dang ki khoa hoc nao de duyet.");
-                    return;
-                }
-                displayPendingEnrollments(pendingEnrollments);
-                while (true){
-                    System.out.println("1.duyet dang ki");
-                    System.out.println("2.tu choi dang ki");
-                    System.out.println("0. quay lai");
-                    System.out.println("Vui long chon chuc nang:");
-                    int choice = readInt();
-                    switch (choice){
-                        case 1:
-                            System.out.print("Nhap ID phien  đăng kí:");
-                            int enrollmentId = Integer.parseInt(scanner.nextLine());
-                            EnrollmentDTO enrollmentDTO = new EnrollmentDTO();
-                                enrollmentDTO.setEnrollment_id(enrollmentId);
-                                boolean sucess = enrollmentService.approveEnrollment(enrollmentDTO);
+            if (pendingEnrollments == null || pendingEnrollments.isEmpty()) {
+                System.out.println("Khong co dang ki khoa hoc nao de duyet.");
+                return;
+            }
+            displayPendingEnrollments(pendingEnrollments);
 
-                            if(sucess){
-                                System.out.println("Duyet dang ki khoa hoc thanh cong.");
-                            }else{
-                                System.out.println("Duyet dang ki khoa hoc that bai. Vui long kiem tra lai ID dang ki.");
-                            }
-                            break;
-                        case 2:
-                            System.out.print("Nhap ID phien  đăng kí:");
-                            int denyEnrollmentId = Integer.parseInt(scanner.nextLine());
-                            EnrollmentDTO denyEnrollmentDTO = new EnrollmentDTO();
-                            denyEnrollmentDTO.setEnrollment_id(denyEnrollmentId);
-                            boolean denySuccess = enrollmentService.denyEnrollment(denyEnrollmentDTO);
-
-                            if(denySuccess){
-                                System.out.println("Tu choi dang ki khoa hoc thanh cong.");
-                            }else{
-                                System.out.println("Tu choi dang ki khoa hoc that bai. Vui long kiem tra lai ID dang ki.");
-                            }
-                            break;
-                        case 0:
-                            return;
-                        default:
-                            System.out.println("Lỗi: Lựa chọn không hợp lệ. Vui lòng chọn lại.");
-                    }
+            while (true) {
+                System.out.println("1. Duyet dang ki");
+                System.out.println("2. Tu choi dang ki");
+                System.out.println("0. Quay lai");
+                System.out.print("Vui long chon chuc nang: ");
+                int choice = readInt();
+                switch (choice) {
+                    case 1:
+                        handleApproval(true);
+                        break;
+                    case 2:
+                        handleApproval(false);
+                        break;
+                    case 0:
+                        return;
+                    default:
+                        System.out.println("Loi: Lua chon khong hop le. Vui long chon lai.");
                 }
-        }catch (NumberFormatException e){
-            throw new RuntimeException(e);
+            }
+        } catch (Exception e) {
+            System.out.println("Loi he thong: " + e.getMessage());
+        }
+    }
+
+    private void handleApproval(boolean approve) {
+        try {
+            int enrollmentId = readPositiveInt("Nhap ID phien dang ki: ");
+            if (enrollmentId <= 0) return;
+            EnrollmentDTO dto = new EnrollmentDTO();
+            dto.setEnrollment_id(enrollmentId);
+            boolean success = approve
+                    ? enrollmentService.approveEnrollment(dto)
+                    : enrollmentService.denyEnrollment(dto);
+            String action = approve ? "Duyet" : "Tu choi";
+            if (success) {
+                System.out.println(action + " dang ki thanh cong.");
+            } else {
+                System.out.println(action + " that bai. Vui long kiem tra lai ID dang ki.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Loi: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Loi he thong: " + e.getMessage());
         }
     }
 
     private void listEnrollments() {
-        System.out.println("\n--------- DANH SÁCH ĐĂNG KÍ KHÓA HỌC ---------");
-        try{
-            System.out.println("Nhap ID khóa học để xem danh sách đăng kí:");
-            int courseId = Integer.parseInt(scanner.nextLine());
+        System.out.println("\n--------- DANH SACH DANG KI KHOA HOC ---------");
+        try {
+            int courseId = readPositiveInt("Nhap ID khoa hoc de xem danh sach dang ki: ");
+            if (courseId <= 0) return;
             List<EnrollmentDTO> enrollments = enrollmentService.listNameStudentRegistedCourse(courseId);
             displayCourseEnrollments(enrollments);
-
-        } catch (NumberFormatException e) {
-            throw new RuntimeException(e);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Loi: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Loi he thong: " + e.getMessage());
         }
     }
 
@@ -190,8 +196,23 @@ public class EnrollmentManagementMenu {
 
     private int readInt() {
         try {
-            return Integer.parseInt(scanner.nextLine());
+            return Integer.parseInt(scanner.nextLine().trim());
         } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    private int readPositiveInt(String prompt) {
+        System.out.print(prompt);
+        try {
+            int value = Integer.parseInt(scanner.nextLine().trim());
+            if (value <= 0) {
+                System.out.println("Loi: ID phai la so duong.");
+                return -1;
+            }
+            return value;
+        } catch (NumberFormatException e) {
+            System.out.println("Loi: Vui long nhap so nguyen hop le.");
             return -1;
         }
     }

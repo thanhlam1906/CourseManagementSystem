@@ -33,6 +33,15 @@ public class EnrollmentDAOImpl implements EnrollmentDAO {
             }
             return status;
         } catch (SQLException e) {
+            if ("23503".equals(e.getSQLState())) {
+                String errorMessage = e.getMessage() == null ? "" : e.getMessage();
+                if (errorMessage.contains("enrollment_course_id_fkey")) {
+                    throw new IllegalArgumentException("Khoa hoc khong ton tai.");
+                }
+                if (errorMessage.contains("enrollment_student_id_fkey")) {
+                    throw new IllegalArgumentException("Hoc vien khong ton tai.");
+                }
+            }
             throw new RuntimeException("Khong the dang ky khoa hoc: " + e.getMessage(), e);
         }
     }
@@ -47,7 +56,7 @@ public class EnrollmentDAOImpl implements EnrollmentDAO {
             int affectedRows = ps.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Khong the huy dang ky khoa hoc: " + e.getMessage());
+            throw new RuntimeException("Khong the huy dang ky khoa hoc: " + e.getMessage(), e);
         }
 
     }
@@ -93,9 +102,8 @@ public class EnrollmentDAOImpl implements EnrollmentDAO {
 
     @Override
     public List<Enrollment> listNameStudentRegistedCourse(int courseId) {
-        String sql = "select e.id, e.course_id ,s.name as student_name, c.name as course_name \n" +
+        String sql = "select e.id, e.student_id, e.course_id, s.name as student_name, c.name as course_name \n" +
                 "from enrollment e \n" +
-                "join student s on s.id = e.student_id\n" +
                 "join course c on c.id = e.course_id\n" +
                 "where e.course_id = ?";
         try (Connection connection = DBUtil.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -105,6 +113,7 @@ public class EnrollmentDAOImpl implements EnrollmentDAO {
                 while (resultSet.next()) {
                     Enrollment enrollment = new Enrollment();
                     enrollment.setId(resultSet.getInt("id"));
+                    enrollment.setStudentId(resultSet.getInt("student_id"));
                     enrollment.setCourseId(resultSet.getInt("course_id"));
 
                     Student student = new Student();
