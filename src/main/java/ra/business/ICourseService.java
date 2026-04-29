@@ -11,5 +11,5 @@ public interface ICourseService {
     boolean updateCourse(CourseDTO courseDTO);
     CourseDTO getCourseById(int id);
     CourseDTO getCourseByName(String name);
-    List<CourseDTO> sortNameCourses();
+    List<CourseDTO> sortNameCourses( boolean ascending);
 }

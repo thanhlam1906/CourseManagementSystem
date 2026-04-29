@@ -47,18 +47,39 @@ public class CourseManagementMenu {
     }
 
     private void sortCourses() {
-        System.out.println("\n--------- SẮP XẾP KHÓA HỌC THEO TÊN ---------");
-        try {
-          List<CourseDTO> sortedCourses = courseService.sortNameCourses();
-          if(sortedCourses != null && !sortedCourses.isEmpty()){
-              displayCourseList(sortedCourses);
-          }else{
-              System.out.println("Không có khóa học nào để sắp xếp.");
-          }
+        System.out.println("\n--------- SẮP XẾP KHÓA HỌC ---------");
 
-        } catch (Exception e) {
-            System.err.println("Lỗi hệ thống: " + e.getMessage());
+        try {
+            List<CourseDTO> courses = courseService.getAllCourses();
+            if (courses == null || courses.isEmpty()) {
+                System.out.println("Không có khóa học nào để sắp xếp.");
+                return;
+            }
+            while (true){
+                displayCourseList(courses);
+                System.out.println("1. Sắp xếp theo tên khóa học (A-Z)");
+                System.out.println("2. Sắp xếp theo tên khóa học (Z-A)");
+                System.out.println("0. Quay lại");
+
+                int choice = readInt("Vui lòng chọn cách sắp xếp: ");
+                switch (choice){
+                    case 1:
+                        courses = courseService.sortNameCourses( true);
+                        break;
+                    case 2:
+                        courses = courseService.sortNameCourses( false);
+                        break;
+                    case 0:
+                        return;
+                    default:
+                        System.out.println("Lỗi: Lựa chọn không hợp lệ. Vui lòng chọn lại.");
+                }
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Lỗi: Vui lòng nhập số.");
+            return;
         }
+
     }
 
     private void searchCourses() {
@@ -242,6 +263,18 @@ public class CourseManagementMenu {
             System.err.println("Lỗi: " + e.getMessage());
         } catch (Exception e) {
             System.err.println("Lỗi hệ thống: " + e.getMessage());
+        }
+    }
+
+    private int readInt(String message) {
+        while (true) {
+            System.out.print(message);
+            String input = scanner.nextLine().trim();
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Vui long nhap mot so hop le.");
+            }
         }
     }
 }

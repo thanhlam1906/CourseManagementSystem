@@ -7,6 +7,7 @@ import ra.model.Course;
 import ra.dto.CourseDTO;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -75,7 +76,7 @@ public class CourseServiceImpl implements ICourseService {
     @Override
     public CourseDTO getCourseById(int id) {
         Course course =  dao.findById(id);
-        if(course == null){
+        if(course == null ){
             return null;
         }
 
@@ -85,7 +86,7 @@ public class CourseServiceImpl implements ICourseService {
     @Override
     public CourseDTO getCourseByName(String name) {
         if(name == null|| name.trim().isEmpty()){
-            return null;
+          throw new IllegalArgumentException("Loi : ten khoa hoc khong duoc de trong");
         }
         return  dao.searchByName(name).stream()
                 .map(entity -> toDTO(entity))
@@ -94,14 +95,21 @@ public class CourseServiceImpl implements ICourseService {
     }
 
     @Override
-    public List<CourseDTO> sortNameCourses(){
+    public List<CourseDTO> sortNameCourses(boolean ascending) {
         List<CourseDTO> courseDTOs = getAllCourses();
-        if (courseDTOs == null || courseDTOs.isEmpty()) {
-            return new ArrayList<>();
-        }
-        return courseDTOs.stream()
-                .sorted((c1, c2) -> c1.getCourseName().compareToIgnoreCase(c2.getCourseName()))
-                .collect(Collectors.toList());
+
+        courseDTOs.sort((c1, c2) -> {
+            String name1 = c1.getCourseName() == null ? "" : c1.getCourseName();
+            String name2 = c2.getCourseName() == null ? "" : c2.getCourseName();
+
+            if (ascending) {
+                return name1.compareToIgnoreCase(name2);
+            } else {
+                return name2.compareToIgnoreCase(name1);
+            }
+        });
+
+        return courseDTOs;
     }
 
     private  Course toEntity(CourseDTO dto) {
