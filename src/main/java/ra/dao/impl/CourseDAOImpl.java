@@ -102,14 +102,13 @@ public class CourseDAOImpl implements CourseDAO {
 
     @Override
     public List<Course> searchByName(String name) {
-        String sql = "select id, name, instructor, create_at from course where name ilike ?";
+        String sql = "select id, name, duration, instructor, create_at from course where name ilike ?";
         List<Course> courses = new ArrayList<>();
-        try(Connection connection = DBUtil.getConnection(); PreparedStatement ps = connection.prepareCall(sql);   ){
+        try(Connection connection = DBUtil.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, "%" + name + "%");
             try(ResultSet resultSet = ps.executeQuery()){
                 while (resultSet.next()){
                     Course course = new Course();
-                    ps.setString(1, "%" + name + "%");
                     course.setId(resultSet.getInt("id"));
                     course.setName(resultSet.getString("name"));
                     course.setInstructor(resultSet.getString("instructor"));

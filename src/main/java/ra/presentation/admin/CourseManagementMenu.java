@@ -17,7 +17,13 @@ public class CourseManagementMenu {
             System.out.println("===== QUẢN LÝ KHÓA HỌC =====");
             System.out.println("1. Danh sách | 2. Thêm | 3. Sửa | 4. Xóa | 5. Tìm Kiếm | 6. Sap xếp | 0. Quay lại");
             System.out.print("Vui lòng chọn chức năng:");
-            int choice = Integer.parseInt(scanner.nextLine());
+            int choice;
+            try {
+                choice = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Lỗi: Lựa chọn phải là số. Vui lòng chọn lại.");
+                continue;
+            }
             switch (choice){
                 case 1:
                     listCourses();
