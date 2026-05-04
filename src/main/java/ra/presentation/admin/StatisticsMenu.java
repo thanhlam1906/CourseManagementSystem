@@ -116,7 +116,7 @@ public class StatisticsMenu {
             try {
                 return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.print("Loi: Vui long nhap so: ");
+                System.out.print("Loi: Vui long nhap so ");
             }
         }
     }

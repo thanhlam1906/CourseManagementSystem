@@ -156,8 +156,7 @@ public class CourseManagementMenu {
             System.out.print("Tên khóa học: ");
             String name = scanner.nextLine().trim();
 
-            System.out.print("Thời lượng (giờ): ");
-            int duration = Integer.parseInt(scanner.nextLine().trim());
+            int duration = readInt("Thời lượng (giờ): ");
 
             System.out.print("Giảng viên: ");
             String instructor = scanner.nextLine().trim();
@@ -179,12 +178,9 @@ public class CourseManagementMenu {
         }
     }
     public void updateCourse(){
-        System.out.print("\nNhập ID khóa học cần sửa: ");
-        int id;
-        try {
-            id = Integer.parseInt(scanner.nextLine().trim());
-        } catch (NumberFormatException e) {
-            System.out.println("Lỗi: ID phải là số nguyên.");
+        System.out.println();
+        int id = readInt("Nhập ID khóa học cần sửa (0 để quay lại): ");
+        if (id == 0) {
             return;
         }
 
@@ -221,12 +217,7 @@ public class CourseManagementMenu {
                     existingCourse.setCourseName(newName);
                     break;
                 case 2:
-                    System.out.print("Nhập thời lượng mới (giờ): ");
-                    try {
-                        existingCourse.setDuration(Integer.parseInt(scanner.nextLine().trim()));
-                    } catch (NumberFormatException e) {
-                        System.out.println("Lỗi: Thời lượng phải là số nguyên.");
-                    }
+                    existingCourse.setDuration(readInt("Nhập thời lượng mới (giờ): "));
                     break;
                 case 3:
                     System.out.print("Nhập tên giảng viên mới: ");
@@ -256,8 +247,11 @@ public class CourseManagementMenu {
     }
     public void deleteCourse(){
         System.out.println("\n Xóa khóa học");
-        System.out.print("Nhập ID khóa học cần xóa: ");
-        String id = scanner.nextLine().trim();
+        int idInt = readInt("Nhập ID khóa học cần xóa (0 để quay lại): ");
+        if (idInt == 0) {
+            return;
+        }
+        String id = String.valueOf(idInt);
         try {
             boolean success = courseService.deleteCourse(id);
             if (success) {

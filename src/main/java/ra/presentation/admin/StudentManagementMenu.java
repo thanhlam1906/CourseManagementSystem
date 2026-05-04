@@ -20,15 +20,8 @@ public class StudentManagementMenu {
         while (true) {
             System.out.println("===== QUAN LY SINH VIEN =====");
             System.out.println("1. Danh sach | 2. Them | 3. Sua | 4. Xoa | 5. Tim kiem | 6. Sap xep | 0. Quay lai");
-            System.out.print("Vui long chon chuc nang: ");
 
-            int choice;
-            try {
-                choice = Integer.parseInt(scanner.nextLine().trim());
-            } catch (NumberFormatException e) {
-                System.out.println("Loi: Vui long nhap so tu 0 den 6.");
-                continue;
-            }
+            int choice = readInt("Vui long chon chuc nang: ");
 
             switch (choice) {
                 case 1:
@@ -58,46 +51,32 @@ public class StudentManagementMenu {
     }
 
     private void sortStudents() {
-        boolean isSorting = true;
-        while (isSorting) {
+        while (true) {
             System.out.println("\n--------- SAP XEP SINH VIEN THEO TEN ---------");
             System.out.println("1. Sap xep tang dan | 2. Sap xep giam dan | 0. Quay lai");
-            System.out.print("Vui long chon chuc nang: ");
-            int choice;
 
-
-            try {
-                choice = Integer.parseInt(scanner.nextLine().trim());
-                boolean isIncrease = (choice == 1);
-                        List<StudentDTO> sortedAsc = studentService.sortNameStudents(isIncrease);
-                        displayStudentList(sortedAsc);
-                        if (choice == 0) {
-                            isSorting = false;
-                        } else if (choice != 1 && choice != 2) {
-                            System.out.println("Loi: Lua chon khong hop le. Vui long chon lai.");
-                        }
-
-            } catch (NumberFormatException e) {
-                System.out.println("Loi: Vui long nhap so tu 0 den 2.");
-                continue;
+            int choice = readInt("Vui long chon chuc nang: ");
+            switch (choice) {
+                case 1:
+                    displayStudentList(studentService.sortNameStudents(true));
+                    break;
+                case 2:
+                    displayStudentList(studentService.sortNameStudents(false));
+                    break;
+                case 0:
+                    return;
+                default:
+                    System.out.println("Loi: Lua chon khong hop le. Vui long chon lai.");
             }
         }
     }
 
     private void searchStudents() {
-        boolean isSearching = true;
-        while (isSearching) {
+        while (true) {
             System.out.println("\n--------- TIM KIEM SINH VIEN ---------");
             System.out.println("1. Tim theo ID | 2. Tim theo ten | 0. Quay lai");
-            System.out.print("Vui long chon chuc nang: ");
 
-            int choice;
-            try {
-                choice = Integer.parseInt(scanner.nextLine().trim());
-            } catch (NumberFormatException e) {
-                System.out.println("Loi: Vui long nhap so tu 0 den 2.");
-                continue;
-            }
+            int choice = readInt("Vui long chon chuc nang: ");
 
             switch (choice) {
                 case 1:
@@ -107,8 +86,7 @@ public class StudentManagementMenu {
                     searchStudentByName();
                     break;
                 case 0:
-                    isSearching = false;
-                    break;
+                    return;
                 default:
                     System.out.println("Loi: Lua chon khong hop le. Vui long chon lai.");
             }
@@ -116,12 +94,8 @@ public class StudentManagementMenu {
     }
 
     private void updateStudent() {
-        System.out.print("Nhap id sinh vien can sua: ");
-        int id;
-        try {
-            id = Integer.parseInt(scanner.nextLine().trim());
-        } catch (NumberFormatException e) {
-            System.out.println("Loi: ID phai la so nguyen.");
+        int id = readInt("Nhap id sinh vien can sua (0 de quay lai): ");
+        if (id == 0) {
             return;
         }
 
@@ -210,17 +184,19 @@ public class StudentManagementMenu {
 
     private void deleteStudent() {
         System.out.println("\n--------- XOA SINH VIEN ---------");
+        int idInt = readInt("Nhap ID sinh vien can xoa (0 de quay lai): ");
+        if (idInt == 0) {
+            return;
+        }
         try {
-            System.out.print("Nhap ID sinh vien can xoa: ");
-            String id = scanner.nextLine().trim();
-            boolean success = studentService.deleteStudent(id);
+            boolean success = studentService.deleteStudent(String.valueOf(idInt));
             if (success) {
                 System.out.println("Xoa sinh vien thanh cong!");
             } else {
                 System.out.println("Xoa sinh vien that bai! Vui long kiem tra lai ID.");
             }
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Loi: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Loi he thong: " + e.getMessage());
         }
@@ -264,7 +240,7 @@ public class StudentManagementMenu {
             List<StudentDTO> students = studentService.getAllStudents();
             displayStudentList(students);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println("Loi he thong: " + e.getMessage());
         }
     }
 
@@ -442,6 +418,17 @@ public class StudentManagementMenu {
                 continue;
             }
             return phone;
+        }
+    }
+    private int readInt(String message) {
+        while (true) {
+            System.out.print(message);
+            String input = scanner.nextLine().trim();
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Vui long nhap mot so hop le.");
+            }
         }
     }
 }
